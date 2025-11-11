@@ -1,0 +1,26 @@
+.
+├── app/
+│   ├── __init__.py
+│   ├── main.py               # The entry point to run your FastAPI app
+│   ├── models/
+│   │   ├── __init__.py
+│   │   ├── product.py        # Model for the Product table
+│   │   ├── customer.py       # Model for the Customer table
+│   │   ├── order.py          # Model for the Order table
+│   │   └── category.py       # Model for the Category table
+│   ├── schemas/
+│   │   ├── __init__.py
+│   │   ├── product.py        # Pydantic schema for Product
+│   │   ├── customer.py       # Pydantic schema for Customer
+│   │   ├── order.py          # Pydantic schema for Order
+│   │   └── category.py       # Pydantic schema for Category
+│   ├── crud/
+│   │   ├── __init__.py
+│   │   ├── product.py        # CRUD functions for Product
+│   │   ├── customer.py       # CRUD functions for Customer
+│   │   ├── order.py          # CRUD functions for Order
+│   │   └── category.py       # CRUD functions for Category
+│   ├── database.py           # Database connection and session setup
+│   └── config.py             # Configuration settings (e.g., environment variables, database URL)
+├── requirements.txt          # List of dependencies
+└── alembic/                  # Database migrations with Alembic
