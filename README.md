@@ -15,7 +15,7 @@ It handles:
 The API is documented using **Swagger / OpenAPI**:  
 [API Docs](https://grocery-app-k42u.onrender.com/docs)
 
-> **Note:** You can use this link to explore and test all available endpoints and test them directly. 
+> **Note:** You can use this link to explore all available endpoints and test them directly. 
 
 ---
 
@@ -155,7 +155,7 @@ The API is documented using **Swagger / OpenAPI**:
 The API is documented using **Swagger / OpenAPI**:  
 [API Docs](https://grocery-app-k42u.onrender.com/docs)
 
-> **Note:** You can use this link to explore and test all available endpoints and test them directly
+> **Note:** You can use this link to explore all available endpoints and test them directly
 ---
 
 ## API Routes
@@ -235,5 +235,6 @@ The API is documented using **Swagger / OpenAPI**:
 |--------|-----------------------|-------------|
 | POST   | `/coupon`             | Add a new coupon. Requires coupon details in JSON body. |
 | DELETE | `/coupon/{coupon_id}` | Delete a coupon by `coupon_id`. |
+
 
 
