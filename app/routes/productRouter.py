@@ -86,32 +86,47 @@ async def addProduct(res:Response,
     
 
 
+    
+
+
     if not user:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="user not authenticated")
     
+
+
     if not file:
         raise HTTPException(status_code=400,detail="image file is missing")
     
+
 
     existing_product=db.query(Product).filter(Product.product_name==product_name).first()
 
     if existing_product:
         raise HTTPException(status_code=400,detail="product already exists,please update details")
     
+    
+
+    
     filename,ext=os.path.splitext(file.filename)
 
+    
     if ext.lower() not in ['.jpeg',".png",".jpg",".webp"]:
         raise HTTPException(status_code=400,detail="please upload a image file")
     
-    local_path=f"upload/{file.filename}"
-    with open (local_path,"wb") as f:
+    
+    UPLOAD_DIR = "upload"
+    os.makedirs(UPLOAD_DIR, exist_ok=True) 
+    local_path = os.path.join(UPLOAD_DIR, file.filename)
 
-        try:
+    try:
+     with open (local_path,"wb") as f:
+
             f.write(file.file.read())
             uploadedFileUrl= image_uploader(f"upload/{file.filename}")
-        except Exception as e:
-            raise Exception(e)
         
+    except Exception as e:
+        
+        raise HTTPException(status_code=500, detail="Error uploading file")
         
         
 
