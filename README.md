@@ -9,10 +9,13 @@ It handles:
 - Cart management
 - Sales reports (for managers)
 - A simple discount system
- - The backend is **deployed on Render**:  
-[https://grocery-app-k42u.onrender.com](https://grocery-app-k42u.onrender.com)
+ - The backend is **deployed on Render**:
+## API Documentation
 
-> **Note:** The above link can be used to access the APIs directly.
+The API is documented using **Swagger / OpenAPI**:  
+[API Docs](https://grocery-app-k42u.onrender.com/docs)
+
+> **Note:** You can use this link to explore and test all available endpoints and test them directly. 
 
 ---
 
@@ -147,10 +150,12 @@ It handles:
 
 > Use the above credentials to test the API.
 
-  The backend is **deployed on Render**:  
-[https://grocery-app-k42u.onrender.com](https://grocery-app-k42u.onrender.com)
+## API Documentation
 
-> **Note:** The above link can be used to access the APIs directly.
+The API is documented using **Swagger / OpenAPI**:  
+[API Docs](https://grocery-app-k42u.onrender.com/docs)
+
+> **Note:** You can use this link to explore and test all available endpoints and test them directly
 ---
 
 ## API Routes
@@ -230,4 +235,5 @@ It handles:
 |--------|-----------------------|-------------|
 | POST   | `/coupon`             | Add a new coupon. Requires coupon details in JSON body. |
 | DELETE | `/coupon/{coupon_id}` | Delete a coupon by `coupon_id`. |
+
 
