@@ -10,10 +10,14 @@ from routes import cartRouter
 from routes import salesReport
 from routes import checkout
 from routes import coupons
+from fastapi.openapi.utils import get_openapi
 import jwt
 
 
 app=FastAPI()
+
+
+
 
 @app.get("/", summary="Health check", tags=["root"])
 def home():

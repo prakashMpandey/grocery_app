@@ -5,6 +5,7 @@ from database import get_db
 from models.users import User
 from pydantic import EmailStr, BaseModel,Field
 from dotenv import load_dotenv
+from typing import Literal,Optional
 from utils.auth_utils import getPasswordHash,createAccessToken,verifyPassword
 import jwt
 import os
@@ -19,6 +20,7 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 class SignupPayload(BaseModel):
     email: EmailStr=Field(description="email of the user")
     username: str=Field(...,min_length=3,description="username")
+    role:Optional[Literal["manager","customer"]]=Field(...,description="add role either manager or customer")
     password: str=Field(...,min_length=8,description="password should be min 8 letters")
 
 #structure of signin request
@@ -62,10 +64,12 @@ def signup(payload: SignupPayload, db: Session = Depends(get_db)):
     email = str(payload.email)
     existing_user = db.query(User).filter((User.email == email) | (User.username == payload.username)).first()
 
+
     if existing_user:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="user already exists")
+    
 
-    new_user = User(email=email, password=getPasswordHash(payload.password), username=payload.username)
+    new_user = User(email=email, password=getPasswordHash(payload.password), username=payload.username,role=payload.role)
 
     db.add(new_user)
     db.commit()
