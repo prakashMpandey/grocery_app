@@ -46,11 +46,13 @@ def addCartItem(cart_item:CartInModel,user:User=Depends(get_current_user),db:Ses
     cart=db.query(Cart).filter(Cart.user_id==user.id).first()
 
     if not cart:
-        db.add(Cart(user_id=user.id))
-        db.commit()
-        db.refresh(cart)
+         new_cart = Cart(user_id=user.id)
+         db.add(new_cart)
+         db.commit()
+         db.refresh(new_cart)
+         cart = new_cart
         
-        pass
+         pass
 
     product=db.query(Product).filter(Product.id==cart_item.product_id).first()
 

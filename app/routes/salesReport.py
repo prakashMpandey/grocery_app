@@ -1,21 +1,14 @@
-from fastapi import APIRouter,Depends,HTTPException,status,Response,Form,Request,File,UploadFile,Form
+from fastapi import APIRouter,Depends,HTTPException
 from models.products import Product,Category
 from database import get_db
 from .authRouter import get_current_user
-from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session,joinedload
-from typing import Annotated,Optional
+from typing import Optional
 from .productRouter import manager_required
 from pydantic import BaseModel,Field
 from models.orders import Order_Item,Order
 from models.users import User
 from sqlalchemy import func
-
-from sqlalchemy import select
-
-from typing import List
-
-from datetime import datetime
 import uuid
 
 
@@ -29,6 +22,11 @@ class salesReportResponse(BaseModel):
     total_orders:Optional[int]=Field(description="total no of orders placed")
     soldQty:Optional[int]=Field(description="total no of units sold")
     
+
+
+
+
+
 
 @router.get("/sales")
 async def generateSalesReport(most_sold:Optional[bool]=False,category:Optional[str]=None,user:User=Depends(manager_required),db:Session=Depends(get_db)):
@@ -61,9 +59,6 @@ async def generateSalesReport(most_sold:Optional[bool]=False,category:Optional[s
 
     products=query.all()
 
-
-    # for product,cat,totalOrder,soldQty in products:
-    #     print(cat.id)
     result=[
         salesReportResponse(
             product_id=product.id,

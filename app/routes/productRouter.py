@@ -57,7 +57,7 @@ class ProductOut(BaseModel):
         from_attributes=True
 
 class PaginatedProducts(BaseModel):
-    items:List[ProductOut]
+    items:Optional[List[ProductOut]]=Field(default=[])
     total:int
     page:int
     limit:int
@@ -183,7 +183,13 @@ async def get_all_Products(page:Optional[int]=Query(1,ge=1),limit:Optional[int]=
     if  category:
         category_data=db.query(Category).filter(Category.category==category.lower()).first()
         if not category_data:
-            return []
+                return PaginatedProducts(
+                items=[],
+        total=0,
+        page=page,
+        limit=limit
+    )
+
         product_query=(product_query.options(joinedload(Product.category)).filter(Product.category_id==category_data.id))
  
 
@@ -195,11 +201,8 @@ async def get_all_Products(page:Optional[int]=Query(1,ge=1),limit:Optional[int]=
 
     products= product_query.offset(offset).limit(limit).all()
     
-    if not products:
-        raise HTTPException(
-        status_code=404,
-        detail="No products found for given filters."
-    )
+    if not products or len(products)==0:
+       return PaginatedProducts(items=[], total=0, page=page, limit=limit)
 
     return PaginatedProducts(
         items=products,
@@ -239,7 +242,7 @@ async def updateProduct(product_id:str,product:Product_schema,user:User=Depends(
 
         if not category_data:
             db.add(Category(category=product.category))
-            db.commit
+            db.commit()
             db.refresh(category_data)
             pass
 
@@ -247,8 +250,7 @@ async def updateProduct(product_id:str,product:Product_schema,user:User=Depends(
         db_product.stock_count=product.stock_count
         db_product.unit_price=product.unit_price
         db_product.product_min_stock=product.product_min_stock
-        db_product.unit_of_measure=product.unit_of_measure
-        db_product.category_id=category_data.category_id
+        db_product.category_id=category_data.id
         db.commit()
         return {"status":200,"success":True,"message":"product updated successfully"}
     

@@ -1,6 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Form
 from database import get_db
+from sqlalchemy.orm import Session
 from .authRouter import get_current_user
+from models.orders import Order ,Order_Item
+from models.products import Product
 from typing import Optional, List
 from pydantic import BaseModel, Field
 from models.users import User
@@ -24,25 +27,28 @@ class BillItem(BaseModel):
 
 class CheckOutResponse(BaseModel):
     items: Optional[List[BillItem]]
-    total_amount: float = 0
-    discount_amount: float = 0
+    total_amount: Optional[float] = 0
+    final_amount:Optional[float]=0
+    discount_amount: Optional[float] = 0
     coupon_applied: bool = False
-    purchase_date: datetime = Field(default_factory=datetime.utcnow)
+    purchase_date:datetime = Field(default_factory=datetime.now)
 
 
 router = APIRouter(tags=["checkout"])
+
+
 
 
 @router.post("/checkout", response_model=CheckOutResponse)
 def checkoutHandler(
     couponCode: Optional[str] = Form(None),
     user: User = Depends(get_current_user),
-    db=Depends(get_db)
+    db:Session=Depends(get_db)
 ):
     if not user.cart or not user.cart.id:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Cart is empty")
 
-    cart_items = db.query(Cart_Item).filter(Cart_Item.cart_id == user.cart.id).all()
+    cart_items = (db.query(Cart_Item).filter(Cart_Item.cart_id == user.cart.id).all())
     if not cart_items:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No items in cart")
 
@@ -64,29 +70,20 @@ def checkoutHandler(
             )
         )
 
+    print("coupon :",couponCode)
     if couponCode:
         couponData = db.query(Coupons).filter(Coupons.coupon_code == couponCode).first()
+        
         if not couponData:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid coupon code")
 
-        isCouponUsedByUser = (
-            db.query(Used_coupons)
-            .filter(Used_coupons.user_id == user.id, Used_coupons.coupon_id == couponData.id)
-            .first()
-        )
-
-        if isCouponUsedByUser:
-            raise HTTPException(status_code=400, detail="Coupon already used by this user")
-
-        db.add(Used_coupons(user_id=user.id, coupon_id=couponData.id))
-        db.commit()
-
         discount_amount = couponData.amount
-        total_amount = max(total_amount - discount_amount, 0)
+        final_amount=total_amount-discount_amount 
 
     return CheckOutResponse(
         items=bill_items,
         total_amount=total_amount,
         discount_amount=discount_amount,
+        final_amount=final_amount  if final_amount>0 else 0,
         coupon_applied=bool(couponCode),
     )

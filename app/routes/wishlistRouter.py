@@ -91,8 +91,7 @@ def addWishlistItem(wishlist_id:str,item:WishlistItemModel,user:User=Depends(get
     if not wishlist:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=" wishlist does not exists")
     
-    product=db.query(Product).filter(Product.id==item.product_id)
-
+    product=db.query(Product).filter(Product.id==item.product_id).first()
     if not product :
         raise HTTPException(status_coode=status.HTTP_404_NOT_FOUND,detail="product does not exists")
     
@@ -101,6 +100,7 @@ def addWishlistItem(wishlist_id:str,item:WishlistItemModel,user:User=Depends(get
         wishlist_id=wishlist_id,
         product_id=item.product_id
     )
+
 
     db.add(new_item)
     product.popularity+=1
