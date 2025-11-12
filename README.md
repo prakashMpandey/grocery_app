@@ -26,7 +26,7 @@ It handles:
 
 ## Database Diagram
 
-![Database Diagram](./db_diagram.png)
+![Database Diagram](./db-diagram.png)
 
 ---
 
@@ -230,3 +230,4 @@ It handles:
 |--------|-----------------------|-------------|
 | POST   | `/coupon`             | Add a new coupon. Requires coupon details in JSON body. |
 | DELETE | `/coupon/{coupon_id}` | Delete a coupon by `coupon_id`. |
+
