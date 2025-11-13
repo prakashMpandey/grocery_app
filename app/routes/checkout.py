@@ -80,10 +80,13 @@ def checkoutHandler(
         discount_amount = couponData.amount
         final_amount=total_amount-discount_amount 
 
+        if final_amount < 0:
+            final_amount=0;
+
     return CheckOutResponse(
         items=bill_items,
         total_amount=total_amount,
         discount_amount=discount_amount,
-        final_amount=final_amount  if final_amount>0 else 0,
+        final_amount=final_amount ,
         coupon_applied=bool(couponCode),
     )
