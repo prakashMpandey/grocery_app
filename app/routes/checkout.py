@@ -34,7 +34,7 @@ class CheckOutResponse(BaseModel):
     purchase_date:datetime = Field(default_factory=datetime.now)
 
 
-router = APIRouter(tags=["checkout"])
+router = APIRouter(tags=["customer"])
 
 
 
@@ -70,7 +70,7 @@ def checkoutHandler(
             )
         )
 
-    print("coupon :",couponCode)
+    
     if couponCode:
         couponData = db.query(Coupons).filter(Coupons.coupon_code == couponCode).first()
         
@@ -78,9 +78,10 @@ def checkoutHandler(
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid coupon code")
 
         discount_amount = couponData.amount
-        final_amount=total_amount-discount_amount 
+    
+    final_amount=total_amount-discount_amount 
 
-        if final_amount < 0:
+    if final_amount < 0:
             final_amount=0;
 
     return CheckOutResponse(

@@ -12,7 +12,7 @@ from datetime import datetime
 import uuid
 
 
-router=APIRouter(tags=['wishlist'])
+router=APIRouter(tags=["customer"])
 
 class Wishlist_Model(BaseModel):
     name:str=Field(min_length=3,description="name of the wishlist")

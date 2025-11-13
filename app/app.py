@@ -10,8 +10,8 @@ from routes import cartRouter
 from routes import salesReport
 from routes import checkout
 from routes import coupons
-from fastapi.openapi.utils import get_openapi
-import jwt
+from routes import categoryRouter
+
 
 
 app=FastAPI()
@@ -35,3 +35,4 @@ app.include_router(cartRouter.router)
 app.include_router(checkout.router)
 app.include_router(salesReport.router)
 app.include_router(coupons.router)
+app.include_router(categoryRouter.router)

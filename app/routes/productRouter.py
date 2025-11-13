@@ -62,7 +62,7 @@ class PaginatedProducts(BaseModel):
     page:int
     limit:int
 
-router=APIRouter(tags=['products'])
+router=APIRouter()
 
 
 
@@ -74,7 +74,7 @@ def manager_required(user:User=Depends(get_current_user)):
     return user
 
 
-@router.post("/products",response_model=Product_Response)
+@router.post("/products",response_model=Product_Response,tags=["manager"])
 async def addProduct(res:Response,
     product_name:str=Form(...),
             stock_count:int=Form(...,gt=0,description="no of items in stock"),
@@ -170,7 +170,7 @@ async def addProduct(res:Response,
     )
 
     
-@router.get("/products",response_model=PaginatedProducts)
+@router.get("/products",response_model=PaginatedProducts,tags=["customer"])
 async def get_all_Products(page:Optional[int]=Query(1,ge=1),limit:Optional[int]=Query(10,ge=1),category:Optional[str]=None,most_popular:Optional[bool]=False,user:User=Depends(get_current_user),db=Depends(get_db)):
     
 
@@ -214,7 +214,7 @@ async def get_all_Products(page:Optional[int]=Query(1,ge=1),limit:Optional[int]=
 
     
     
-@router.delete("/products/{product_id}")
+@router.delete("/products/{product_id}",tags=["manager"])
 async def deleteProduct(product_id:str,user:User=Depends(manager_required),db:Session=Depends(get_db)):
     if not user:
         raise HTTPException(status_code=status.HTPP_401_UNAUTHORIZED,detail='unauthorized access')
@@ -231,7 +231,7 @@ async def deleteProduct(product_id:str,user:User=Depends(manager_required),db:Se
     return {"status":200,"success":True,"message":"product deleted succesfully"}
 
    
-@router.post("/products/{product_id}")
+@router.post("/products/{product_id}",tags=["manager"])
 async def updateProduct(product_id:str,product:Product_schema,user:User=Depends(manager_required),db:Session=Depends(get_db)):
 
     db_product=db.query(Product).filter(Product.id==product_id).first()
@@ -258,7 +258,7 @@ async def updateProduct(product_id:str,product:Product_schema,user:User=Depends(
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="product does not exists")
 
 
-@router.get("/product/{product_id}",response_model=ProductOut)
+@router.get("/product/{product_id}",response_model=ProductOut,tags=["customer"])
 async def get_single_product(product_id:str,user:User=Depends(get_current_user),db:Session=Depends(get_db)):
     try: 
         db_product=db.query(Product).options(joinedload(Product.category)).filter(Product.id==product_id).first()

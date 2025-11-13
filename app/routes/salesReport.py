@@ -28,7 +28,7 @@ class salesReportResponse(BaseModel):
 
 
 
-@router.get("/sales")
+@router.get("/sales",tags=["manager"])
 async def generateSalesReport(most_sold:Optional[bool]=False,category:Optional[str]=None,user:User=Depends(manager_required),db:Session=Depends(get_db)):
 
     query = (

@@ -29,7 +29,7 @@ class CouponRes(BaseModel):
 
 
 
-@router.post("/coupon")
+@router.post("/coupon",tags=["manager"])
 def addCoupon(couponData:CouponReq,user:User=Depends(get_current_user),db=Depends(get_db)):
    try: 
     if user.role!='manager':
@@ -46,7 +46,7 @@ def addCoupon(couponData:CouponReq,user:User=Depends(get_current_user),db=Depend
    except Exception as e:
       raise HTTPException(status_code=500,detail=f"{e}")
    
-@router.delete("/coupon/{coupon_id}")
+@router.delete("/coupon/{coupon_id}",tags=["manager"])
 def deleteCoupon(coupon_id:str,user:User=Depends(get_current_user),db=Depends(get_db)):
     try: 
      if user.role!='manager':
@@ -65,7 +65,7 @@ def deleteCoupon(coupon_id:str,user:User=Depends(get_current_user),db=Depends(ge
       raise HTTPException(status_code=500,detail="internal server error")
 
  
-@router.get("/coupons",response_model=List[CouponRes])
+@router.get("/coupons",response_model=List[CouponRes],tags=["manager"])
 def getCoupons(user:User=Depends(get_current_user),db=Depends(get_db)):
     if user.role!='manager':
         raise HTTPException(status_code=401,detail="only manager is authorized")

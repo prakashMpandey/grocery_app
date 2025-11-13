@@ -16,7 +16,7 @@ from datetime import datetime
 import uuid
 
 
-router=APIRouter(tags=['cart'])
+router=APIRouter(tags=["customer"])
 
 class CartInModel(BaseModel):
     product_id:str

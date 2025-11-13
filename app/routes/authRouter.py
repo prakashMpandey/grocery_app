@@ -12,7 +12,7 @@ import os
 
 
 load_dotenv()
-router = APIRouter(prefix="/auth", tags=["auth"])
+router = APIRouter(prefix="/auth",tags=["customer","manager"])
 
 
 
@@ -20,7 +20,6 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 class SignupPayload(BaseModel):
     email: EmailStr=Field(description="email of the user")
     username: str=Field(...,min_length=3,description="username")
-    role:Optional[Literal["manager","customer"]]=Field(...,description="add role either manager or customer")
     password: str=Field(...,min_length=8,description="password should be min 8 letters")
 
 #structure of signin request
@@ -58,7 +57,7 @@ async def get_current_user(req: Request, db: Session = Depends(get_db)):
 
 
 
-@router.post("/signup")
+@router.post("/signup",)
 
 def signup(payload: SignupPayload, db: Session = Depends(get_db)):
     email = str(payload.email)
@@ -69,7 +68,7 @@ def signup(payload: SignupPayload, db: Session = Depends(get_db)):
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="user already exists")
     
 
-    new_user = User(email=email, password=getPasswordHash(payload.password), username=payload.username,role=payload.role)
+    new_user = User(email=email, password=getPasswordHash(payload.password), username=payload.username)
 
     db.add(new_user)
     db.commit()
