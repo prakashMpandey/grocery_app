@@ -12,6 +12,8 @@ It handles:
  - The backend is **deployed on Render**:
 ## API Documentation
 
+[Basic URL ](https://grocery-app-k42u.onrender.com)
+
 The API is documented using **Swagger / OpenAPI**:  
 [API Docs](https://grocery-app-k42u.onrender.com/docs)
 
@@ -235,6 +237,7 @@ The API is documented using **Swagger / OpenAPI**:
 |--------|-----------------------|-------------|
 | POST   | `/coupon`             | Add a new coupon. Requires coupon details in JSON body. |
 | DELETE | `/coupon/{coupon_id}` | Delete a coupon by `coupon_id`. |
+
 
 
 
